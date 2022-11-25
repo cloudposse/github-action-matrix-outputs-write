@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: [setup]
+    strategy:
+      matrix:
+        target: ["one", "two"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -25,10 +28,12 @@ jobs:
       - uses: ./
         id: current
         with:
-          param1: 'true'
+          matrix-key: ${{ matrix.target }}
+          outputs: |-
+            result: ${{ matrix.target }}
 
     outputs:
-      result: "${{ steps.current.outputs.result1 }}"
+      result: "${{ steps.current.outputs.result }}"
 
   assert:
     runs-on: ubuntu-latest
@@ -36,8 +41,13 @@ jobs:
     steps:
       - uses: nick-fields/assert-action@v1
         with:
-          expected: 'true'
-          actual: "${{ needs.test.outputs.result }}"
+          expected: 'one'
+          actual: "${{ fromJson(needs.test.outputs.result)['one'] }}"
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: 'two'
+          actual: "${{ fromJson(needs.test.outputs.result)['two'] }}"
 
   teardown:
     runs-on: ubuntu-latest
