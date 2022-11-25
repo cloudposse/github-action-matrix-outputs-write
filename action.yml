@@ -19,6 +19,7 @@ runs:
   using: "composite"
   steps:
     - uses: actions/download-artifact@v3
+      continue-on-error: true
       with:
         name: matrix-outputs
         path: ./matrix-outputs

@@ -43,7 +43,7 @@ jobs:
         with:
           expected: ''
           actual: "${{ needs.test.outputs.result }}"
-          
+
       - uses: nick-fields/assert-action@v1
         with:
           expected: 'one'
