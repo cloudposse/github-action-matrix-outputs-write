@@ -5,13 +5,15 @@ branding:
   icon: 'file'
   color: 'white'
 inputs:
-  param1:
+  matrix-key:
+    required: false
+    description: "Matrix key"
+  outputs:
     required: true
-    description: "Input parameter placeholder"
-    default: "true"
+    description: "Outputs YAML structured map"
 outputs:
-  result1:
-    description: "Output result placeholder"
+  result:
+    description: "Outputs result"
     value: "${{ steps.context.outputs.action-result }}"
 runs:
   using: "composite"
