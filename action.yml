@@ -31,10 +31,11 @@ runs:
 
     - shell: bash
       run: |
+        mkdir -p ./matrix-outputs
         matrix=$((
           echo '${{ toJSON(inputs.outputs) }}'
         ) | jq -c .)
-        echo "$matrix" > matrix-outputs
+        echo "$matrix" > ./matrix-outputs/result.json
         echo "::set-output name=matrix::$matrix"
       id: matrix
 
