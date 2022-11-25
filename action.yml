@@ -25,12 +25,22 @@ runs:
 
     - shell: bash
       run: |
+        ls -l ./
+        ls -l ./matrix-outputs
+
+    - shell: bash
+      run: |
         matrix=$((
           echo '${{ toJSON(inputs.outputs) }}'
         ) | jq -c .)
         echo "$matrix" > matrix-outputs
         echo "::set-output name=matrix::$matrix"
       id: matrix
+
+    - shell: bash
+      run: |
+        ls -l ./
+        ls -l ./matrix-outputs
 
     - uses: actions/upload-artifact@v3
       with:
