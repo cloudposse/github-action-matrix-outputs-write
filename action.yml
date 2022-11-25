@@ -18,22 +18,26 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: matrix-outputs
+        path: ./matrix-outputs
+
     - shell: bash
       run: |
         matrix=$((
-          echo '${{ toJSON(matrix) }}'
+          echo '${{ toJSON(inputs.outputs) }}'
         ) | jq -c .)
-        echo "$matrix" > matrix
+        echo "$matrix" > matrix-outputs
         echo "::set-output name=matrix::$matrix"
       id: matrix
 
     - uses: actions/upload-artifact@v3
       with:
-        name: ${{ hashFiles('matrix') || 'none' }}
-        path: matrix
+        name: matrix-outputs
+        path: ./matrix-outputs
         if-no-files-found: warn
 
-    - uses: actions/download-artifact@v3
     - shell: bash
       id: context
       run: |
