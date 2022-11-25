@@ -14,12 +14,29 @@ inputs:
 outputs:
   result:
     description: "Outputs result"
-    value: "${{ steps.context.outputs.action-result }}"
+    value: "${{ steps.context.outputs.result }}"
 runs:
   using: "composite"
   steps:
-    - id: context
-      shell: bash
+    - shell: bash
       run: |
-          echo "::set-output name=action-result::${{ inputs.param1 }}"
+        matrix=$((
+          echo '${{ toJSON(matrix) }}'
+        ) | jq -c .)
+        echo "$matrix" > matrix
+        echo "::set-output name=matrix::$matrix"
+      id: matrix
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ hashFiles('matrix') || 'none' }}
+        path: matrix
+        if-no-files-found: warn
+
+    - uses: actions/download-artifact@v3
+    - shell: bash
+      id: context
+      run: |
+        matrix="$(cat */matrix | jq -c --slurp .)"
+        echo "::set-output name=result::$matrix"
 
