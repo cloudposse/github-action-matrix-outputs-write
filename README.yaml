@@ -1,0 +1,78 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: example-github-action-composite
+
+# Tags of this project
+tags:
+  - github-action
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/example-github-action-composite
+
+# Badges to display
+badges:
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/example-github-action-composite.svg"
+    url: "https://github.com/cloudposse/example-github-action-composite/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+related: []
+
+# Short description of this project
+description: Template repository of composite GitHub Action
+
+introduction: |-
+  This is template repository to create composite GitHub Actions. 
+  Feel free to use it as reference and starting point.
+
+references:
+  - name: "github-actions-workflows"
+    description: "Reusable workflows for different types of projects"
+    url: "https://github.com/cloudposse/github-actions-workflows"
+  - name: "example-github-action-release-workflow"
+    description: "Example application with complicated release workflow"
+    url: "https://github.com/cloudposse/example-github-action-release-workflow"
+
+# How to use this project
+usage: |-
+  ```yaml
+    name: Pull Request
+    on:
+      pull_request:
+        branches: [ 'main' ]
+        types: [opened, synchronize, reopened, closed, labeled, unlabeled]
+
+    jobs:
+      context:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Example action
+            uses: cloudposse/example-github-action-composite@main
+            id: example
+            with:
+              param1: true
+  
+        outputs:
+          result: ${{ steps.example.outputs.result1 }}
+  ```
+
+include:
+  - "docs/github-action.md"
+
+# Contributors to this project
+contributors:
+  - name: "Igor Rodionov"
+    github: "goruha"

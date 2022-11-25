@@ -1,0 +1,23 @@
+name: 'Example composite GitHub action'
+description: 'Example composite GitHub action'
+author: hello@cloudposse.com
+branding:
+  icon: 'file'
+  color: 'white'
+inputs:
+  param1:
+    required: true
+    description: "Input parameter placeholder"
+    default: "true"
+outputs:
+  result1:
+    description: "Output result placeholder"
+    value: "${{ steps.context.outputs.action-result }}"
+runs:
+  using: "composite"
+  steps:
+    - id: context
+      shell: bash
+      run: |
+          echo "::set-output name=action-result::${{ inputs.param1 }}"
+
