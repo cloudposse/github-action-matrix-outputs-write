@@ -25,6 +25,7 @@ runs:
         path: ./matrix-outputs
 
     - shell: bash
+      continue-on-error: true
       run: |
         ls -l ./
         ls -l ./matrix-outputs
