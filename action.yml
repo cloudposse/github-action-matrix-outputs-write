@@ -8,9 +8,12 @@ inputs:
   matrix-key:
     required: false
     description: "Matrix key"
-  outputs:
-    required: true
-    description: "Outputs YAML structured map"
+  write:
+    required: false
+    description: "Write YAML structured map of outputs"
+  read:
+    required: false
+    description: "Read YAML structured map of outputs"
 outputs:
   result:
     description: "Outputs result"
@@ -18,42 +21,35 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/download-artifact@v3
-      continue-on-error: true
+    - name: 'Setup jq'
+      uses: dcarbone/install-jq-action@v1.0.0
       with:
-        name: matrix-outputs
-        path: ./matrix-outputs
+        version: 1.5
+        force: 'true'
 
     - shell: bash
-      continue-on-error: true
+      if: ${{ inputs.read == null || inputs.read == '' }}
       run: |
-        ls -l ./
-        ls -l ./matrix-outputs
-
-    - shell: bash
-      run: |
-        mkdir -p ./matrix-outputs
         matrix=$((
           echo '${{ toJSON(inputs.outputs) }}'
         ) | jq -c .)
-        echo "$matrix" > ./matrix-outputs/result.json
+        echo "$matrix" > matrix
         echo "::set-output name=matrix::$matrix"
       id: matrix
 
-    - shell: bash
-      run: |
-        ls -l ./
-        ls -l ./matrix-outputs
-
     - uses: actions/upload-artifact@v3
+      if: ${{ inputs.read == null || inputs.read == '' }}
       with:
-        name: matrix-outputs
-        path: ./matrix-outputs
+        name: ${{ hashFiles('matrix') || 'none' }}
+        path: matrix
         if-no-files-found: warn
 
+    - uses: actions/download-artifact@v3
+      if: ${{ inputs.read != null && inputs.read != '' }}
     - shell: bash
-      id: context
+      if: ${{ inputs.read != null && inputs.read != '' }}
       run: |
-        matrix="$(cat ./matrix-outputs/*.json | jq -c --slurp .)"
+        matrix="$(cat */matrix | jq -c --slurp .)"
         echo "::set-output name=result::$matrix"
+      id: context
 

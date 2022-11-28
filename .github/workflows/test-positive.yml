@@ -29,7 +29,7 @@ jobs:
         id: writer
         with:
           matrix-key: ${{ matrix.target }}
-          outputs: |-
+          write: |-
             result: ${{ matrix.target }}
 
       - uses: ./
