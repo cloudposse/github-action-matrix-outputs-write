@@ -31,7 +31,7 @@ runs:
       if: ${{ inputs.read == null || inputs.read == '' }}
       run: |
         matrix=$((
-          echo '${{ toJSON(inputs.outputs) }}'
+          echo '${{ toJSON(inputs.write) }}'
         ) | jq -c .)
         echo "$matrix" > matrix
         echo "::set-output name=matrix::$matrix"
