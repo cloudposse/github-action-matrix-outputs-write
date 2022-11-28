@@ -55,12 +55,12 @@ jobs:
       - uses: nick-fields/assert-action@v1
         with:
           expected: 'one'
-          actual: "${{ fromJson(needs.test.outputs.result).one }}"
+          actual: "${{ fromJson(needs.test.outputs.result) }}"
 
       - uses: nick-fields/assert-action@v1
         with:
           expected: 'two'
-          actual: "${{ fromJson(needs.test.outputs.result).two }}"
+          actual: "${{ fromJson(needs.test.outputs.result) }}"
 
   teardown:
     runs-on: ubuntu-latest
