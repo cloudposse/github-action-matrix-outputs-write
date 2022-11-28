@@ -49,7 +49,7 @@ jobs:
     steps:
       - uses: nick-fields/assert-action@v1
         with:
-          expected: ''
+          expected: '{"result":{"one":"one","two":"two"}}'
           actual: "${{ needs.test.outputs.result }}"
 
       - uses: nick-fields/assert-action@v1
