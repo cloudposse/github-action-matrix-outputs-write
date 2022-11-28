@@ -27,14 +27,6 @@ runs:
         version: 1.5
         force: 'true'
 
-    - name: 'Setup yq'
-      uses: dcarbone/install-yq-action@v1.0.0
-      if: ${{ inputs.read == null || inputs.read == '' }}
-      with:
-        version: "v4.28.1"
-        download-compressed: true
-        force: true
-
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
       if: ${{ inputs.read == null || inputs.read == '' }}
       id: write
@@ -48,8 +40,7 @@ runs:
     - shell: bash
       if: ${{ inputs.read == null || inputs.read == '' }}
       run: |
-        WRITE=$(echo "${{ steps.write.outputs.result }}" | yq --output-format json  --no-colors --exit-status | jq . -c -e -M)
-        echo "${WRITE}" > matrix
+        echo "${{ steps.write.outputs.result }}" > matrix
         echo "::set-output name=matrix::$matrix"
       id: matrix
 
