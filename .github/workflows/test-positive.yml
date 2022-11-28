@@ -26,14 +26,19 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: ./
-        id: current
+        id: writer
         with:
           matrix-key: ${{ matrix.target }}
           outputs: |-
             result: ${{ matrix.target }}
 
+      - uses: ./
+        id: reader
+        with:
+          read: "['writer']"
+
     outputs:
-      result: "${{ steps.current.outputs.result }}"
+      result: "${{ steps.reader.outputs.result }}"
 
   assert:
     runs-on: ubuntu-latest
