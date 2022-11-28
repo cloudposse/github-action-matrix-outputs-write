@@ -27,13 +27,19 @@ runs:
         version: 1.5
         force: 'true'
 
+    - name: 'Setup yq'
+      uses: dcarbone/install-yq-action@v1.0.0
+      if: ${{ inputs.read == null || inputs.read == '' }}
+      with:
+        version: "v4.28.1"
+        download-compressed: true
+        force: true
+
     - shell: bash
       if: ${{ inputs.read == null || inputs.read == '' }}
       run: |
-        matrix=$((
-          echo '${{ toJSON(inputs.write) }}'
-        ) | jq -c .)
-        echo "$matrix" > matrix
+        WRITE=$( echo "${{ inputs.write }}" | yq --output-format json  --no-colors --exit-status | jq . -c -e -M)
+        echo "${WRITE}" > matrix
         echo "::set-output name=matrix::$matrix"
       id: matrix
 
