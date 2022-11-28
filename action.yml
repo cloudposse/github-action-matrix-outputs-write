@@ -28,7 +28,7 @@ runs:
         force: 'true'
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      if: ${{ inputs.read == null || inputs.read == '' }}
+      if: ${{ inputs.read == '' }}
       id: write
       with:
         query: .
@@ -38,23 +38,23 @@ runs:
               ${{ inputs.write }}
 
     - shell: bash
-      if: ${{ inputs.read == null || inputs.read == '' }}
+      if: ${{ inputs.read == '' }}
       run: |
         echo "${{ steps.write.outputs.result }}" > matrix
         echo "::set-output name=matrix::$matrix"
       id: matrix
 
     - uses: actions/upload-artifact@v3
-      if: ${{ inputs.read == null || inputs.read == '' }}
+      if: ${{ inputs.read == '' }}
       with:
         name: ${{ hashFiles('matrix') || 'none' }}
         path: matrix
         if-no-files-found: warn
 
     - uses: actions/download-artifact@v3
-      if: ${{ inputs.read != null && inputs.read != '' }}
+      if: ${{ inputs.read != '' }}
     - shell: bash
-      if: ${{ inputs.read != null && inputs.read != '' }}
+      if: ${{ inputs.read != '' }}
       run: |
         matrix="$(cat */matrix | jq -c --slurp .)"
         echo "::set-output name=result::$matrix"
