@@ -27,6 +27,18 @@ runs:
         version: 1.5
         force: 'true'
 
+    - shell: bash
+      run:
+        echo '${{ toJson(github) }}'
+
+    - shell: bash
+      run:
+        echo '${{ toJson(job) }}'
+
+    - shell: bash
+      run:
+        echo '${{ toJson(runner) }}'
+
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
       if: ${{ inputs.read == '' }}
       id: write
