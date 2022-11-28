@@ -10,18 +10,13 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    steps:
-      - name: Setup
-        run: echo "Do setup"
-
-  test:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    needs: [setup]
     strategy:
       matrix:
         target: ["one", "two"]
     steps:
+      - name: Setup
+        run: echo "Do setup"
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -32,13 +27,21 @@ jobs:
           write: |-
             result: ${{ matrix.target }}
 
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - uses: ./
-        id: reader
+        id: current
         with:
-          read: "['writer']"
+          read: "['setup']"
 
     outputs:
-      result: "${{ steps.reader.outputs.result }}"
+      result: "${{ steps.current.outputs.result }}"
 
   assert:
     runs-on: ubuntu-latest
