@@ -1,8 +1,8 @@
-name: 'Example composite GitHub action'
-description: 'Example composite GitHub action'
+name: 'Matrix outputs write'
+description: 'Write outputs for matrix'
 author: hello@cloudposse.com
 branding:
-  icon: 'file'
+  icon: 'chevrons-up'
   color: 'white'
 inputs:
   matrix-step-name:
@@ -21,8 +21,13 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - uses: nick-fields/assert-action@v1
+      if: ${{ inputs.matrix-key == '' && inputs.matrix-step-name == '' }}
+      with:
+        expected: 'false'
+        actual: "true"
+
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      if: ${{ inputs.outputs != '' }}
       id: write
       with:
         query: .${{ inputs.matrix-key == '' }}
