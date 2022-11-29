@@ -1,10 +1,10 @@
-name: Test example positive
+name: Test example non-matrix
 on:
 #  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
 #  #
 #  # Added pull_request to register workflow from the PR.
 #  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
-#  pull_request: {}
+  pull_request: {}
   workflow_dispatch: {}
 
 jobs:
