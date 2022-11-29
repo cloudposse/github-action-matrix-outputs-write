@@ -37,18 +37,8 @@ jobs:
     steps:
       - uses: nick-fields/assert-action@v1
         with:
-          expected: '{"result":{"one":"one","two":"two"}}'
+          expected: '2'
           actual: "${{ needs.test.outputs.result }}"
-
-      - uses: nick-fields/assert-action@v1
-        with:
-          expected: 'one'
-          actual: ${{ fromJson(needs.test.outputs.result).result.one }}
-
-      - uses: nick-fields/assert-action@v1
-        with:
-          expected: 'two'
-          actual: ${{ fromJson(needs.test.outputs.result).result.two }}
 
   teardown:
     runs-on: ubuntu-latest
