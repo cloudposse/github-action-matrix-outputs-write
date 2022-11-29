@@ -32,7 +32,7 @@ runs:
               ${{ inputs.outputs }}
           false:
             result:
-              ${{ inputs.matrix-key }}:
+              ${{ inputs.matrix-key || 'null' }}:
                 ${{ inputs.outputs }}
 
     - shell: bash
