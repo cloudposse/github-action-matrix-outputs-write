@@ -70,7 +70,7 @@ runs:
     - shell: bash
       if: ${{ inputs.read != '' }}
       run: |
-        JQ_QUERY="map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)"
+        JQ_QUERY='map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)'
         matrix=$(cat */${{ inputs.matrix-step-name }} | jq -c --slurp "${JQ_QUERY}" )
         echo "::set-output name=result::$matrix"
       id: context
