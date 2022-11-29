@@ -70,8 +70,7 @@ runs:
     - shell: bash
       if: ${{ inputs.read != '' }}
       run: |
-        matrix="$(cat */${{ inputs.matrix-step-name }} | \ 
-          jq -c --slurp 'map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)')"
+        matrix="$(cat */${{ inputs.matrix-step-name }} | jq -c --slurp 'map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)' )"
         echo "::set-output name=result::$matrix"
       id: context
 
