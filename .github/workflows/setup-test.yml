@@ -28,7 +28,7 @@ jobs:
         with:
           matrix-step-name: ${{ inputs.matrix-step-name }}
           matrix-key: ${{ inputs.matrix-key }}
-          write: |-
+          outputs: |-
             result: ${{ inputs.matrix-key }}
 
     outputs:
