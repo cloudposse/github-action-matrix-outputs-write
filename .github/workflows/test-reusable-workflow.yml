@@ -21,6 +21,18 @@ jobs:
     continue-on-error: true
     needs: [setup]
     steps:
+      - shell: bash
+        run:
+          echo '${{ toJson(github) }}'
+
+      - shell: bash
+        run:
+          echo '${{ toJson(job) }}'
+
+      - shell: bash
+        run:
+          echo '${{ toJson(runner) }}'
+        
       - name: Checkout
         uses: actions/checkout@v3
 
