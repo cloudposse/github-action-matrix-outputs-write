@@ -14,6 +14,7 @@ jobs:
       matrix:
         target: ["one", "two"]
     with:
+      matrix-step-name: setup
       matrix-key: ${{ matrix.target }}
 
   test:
@@ -39,6 +40,7 @@ jobs:
       - uses: ./
         id: current
         with:
+          matrix-step-name: setup
           read: "['setup']"
 
     outputs:

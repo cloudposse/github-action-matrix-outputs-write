@@ -23,6 +23,7 @@ jobs:
       - uses: ./
         id: writer
         with:
+          matrix-step-name: ${{ github.job }}
           matrix-key: ${{ matrix.target }}
           write: |-
             result: ${{ matrix.target }}
@@ -38,6 +39,7 @@ jobs:
       - uses: ./
         id: current
         with:
+          matrix-step-name: setup
           read: "['setup']"
 
     outputs:
