@@ -11,12 +11,9 @@ inputs:
   matrix-key:
     required: false
     description: "Matrix key"
-  write:
+  outputs:
     required: false
-    description: "Write YAML structured map of outputs"
-  read:
-    required: false
-    description: "Read YAML structured map of outputs"
+    description: "YAML structured map of outputs"
 outputs:
   result:
     description: "Outputs result"
@@ -30,20 +27,7 @@ runs:
         version: 1.5
         force: 'true'
 
-    - shell: bash
-      run:
-        echo '${{ toJson(github) }}'
-
-    - shell: bash
-      run:
-        echo '${{ toJson(job) }}'
-
-    - shell: bash
-      run:
-        echo '${{ toJson(runner) }}'
-
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      if: ${{ inputs.read == '' }}
       id: write
       with:
         query: .
@@ -53,24 +37,12 @@ runs:
               ${{ inputs.write }}
 
     - shell: bash
-      if: ${{ inputs.read == '' }}
       run: |
-        echo '${{ steps.write.outputs.result }}' > ${{ inputs.matrix-step-name }}
+        echo '${{ steps.outputs.outputs.result }}' > ${{ inputs.matrix-step-name }}
       id: matrix
 
     - uses: actions/upload-artifact@v3
-      if: ${{ inputs.read == '' }}
       with:
         name: ${{ hashFiles( inputs.matrix-step-name ) || 'none' }}
         path: ${{ inputs.matrix-step-name }}
         if-no-files-found: warn
-
-    - uses: actions/download-artifact@v3
-      if: ${{ inputs.read != '' }}
-    - shell: bash
-      if: ${{ inputs.read != '' }}
-      run: |
-        matrix="$(cat */${{ inputs.matrix-step-name }} | jq -c --slurp 'map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)' )"
-        echo "::set-output name=result::$matrix"
-      id: context
-

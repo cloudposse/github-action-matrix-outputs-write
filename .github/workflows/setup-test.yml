@@ -30,5 +30,6 @@ jobs:
           matrix-key: ${{ inputs.matrix-key }}
           write: |-
             result: ${{ inputs.matrix-key }}
+
     outputs:
       result: ${{ inputs.matrix-key }}
