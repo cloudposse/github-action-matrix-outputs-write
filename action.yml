@@ -34,11 +34,11 @@ runs:
         config: |-
           result:
             ${{ inputs.matrix-key }}:
-              ${{ inputs.write }}
+              ${{ inputs.outputs }}
 
     - shell: bash
       run: |
-        echo '${{ steps.outputs.outputs.result }}' > ${{ inputs.matrix-step-name }}
+        echo '${{ steps.write.outputs.result }}' > ${{ inputs.matrix-step-name }}
       id: matrix
 
     - uses: actions/upload-artifact@v3
