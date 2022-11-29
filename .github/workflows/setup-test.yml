@@ -1,0 +1,30 @@
+name: Test workflow
+on:
+  workflow_call:
+    inputs:
+      matrix-key:
+        required: true
+        type: string
+    outputs:
+      result:
+        description: "Result"
+        value: ${{ jobs.do.outputs.result }}
+
+jobs:
+  do:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        run: echo "Do setup"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: ./
+        id: writer
+        with:
+          matrix-key: ${{ inputs.matrix-key }}
+          write: |-
+            result: ${{ inputs.matrix-key }}
+    outputs:
+      result: ${{ inputs.matrix-key }}

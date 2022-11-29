@@ -1,0 +1,60 @@
+name: Test example positive
+on:
+#  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
+#  #
+#  # Added pull_request to register workflow from the PR.
+#  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
+  pull_request: {}
+  workflow_dispatch: {}
+
+jobs:
+  setup:
+    uses: cloudposse/github-action-matrix-outputs/.github/workflows/setup-test.yml@initail
+    strategy:
+      matrix:
+        target: ["one", "two"]
+    with:
+      matrix-key: ${{ matrix.target }}
+
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: ./
+        id: current
+        with:
+          read: "['setup']"
+
+    outputs:
+      result: "${{ steps.current.outputs.result }}"
+
+  assert:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: '{"result":{"one":"one","two":"two"}}'
+          actual: "${{ needs.test.outputs.result }}"
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: 'one'
+          actual: ${{ fromJson(needs.test.outputs.result).result.one }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: 'two'
+          actual: ${{ fromJson(needs.test.outputs.result).result.two }}
+
+  teardown:
+    runs-on: ubuntu-latest
+    needs: [assert]
+    if: ${{ always() }}
+    steps:
+      - name: Tear down
+        run: echo "Do Tear down"
