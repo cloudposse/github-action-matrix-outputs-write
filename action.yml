@@ -17,35 +17,32 @@ inputs:
 outputs:
   result:
     description: "Outputs result"
-    value: "${{ steps.context.outputs.result }}"
+    value: "${{ steps.write.outputs.result }}"
 runs:
   using: "composite"
   steps:
-    - name: 'Setup jq'
-      uses: dcarbone/install-jq-action@v1.0.0
-      if: ${{ inputs.outputs != '' }}
-      with:
-        version: 1.5
-        force: 'true'
-
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
       if: ${{ inputs.outputs != '' }}
       id: write
       with:
-        query: .
+        query: .${{ inputs.matrix-key == '' }}
         config: |-
-          result:
-            ${{ inputs.matrix-key }}:
+          true:
+            result:
               ${{ inputs.outputs }}
+          false:
+            result:
+              ${{ inputs.matrix-key }}:
+                ${{ inputs.outputs }}
 
     - shell: bash
-      if: ${{ inputs.outputs != '' }}
+      if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
       run: |
         echo '${{ steps.write.outputs.result }}' > ${{ inputs.matrix-step-name }}
       id: matrix
 
     - uses: actions/upload-artifact@v3
-      if: ${{ inputs.outputs != '' }}
+      if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
       with:
         name: ${{ hashFiles( inputs.matrix-step-name ) || 'none' }}
         path: ${{ inputs.matrix-step-name }}
