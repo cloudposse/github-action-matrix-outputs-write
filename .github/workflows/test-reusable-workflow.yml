@@ -22,26 +22,11 @@ jobs:
     continue-on-error: true
     needs: [setup]
     steps:
-      - shell: bash
-        run:
-          echo '${{ toJson(github) }}'
+      - uses: actions/download-artifact@v3
 
-      - shell: bash
-        run:
-          echo '${{ toJson(job) }}'
-
-      - shell: bash
-        run:
-          echo '${{ toJson(runner) }}'
-
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - uses: ./
-        id: current
-        with:
-          matrix-step-name: setup
-          read: "['setup']"
+      - id: current
+        run: |-
+          echo "result=$(ls | wc -l)" >> $GITHUB_OUTPUT
 
     outputs:
       result: "${{ steps.current.outputs.result }}"
