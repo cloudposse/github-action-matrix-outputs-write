@@ -22,10 +22,18 @@ runs:
   using: "composite"
   steps:
     - uses: nick-fields/assert-action@v1
-      if: ${{ inputs.matrix-key == '' && inputs.matrix-step-name == '' }}
+      if: ${{ inputs.matrix-key != '' }}
       with:
-        expected: 'false'
-        actual: "true"
+        expected: ''
+        actual: "${{ inputs.matrix-step-name }}"
+        comparison: notEqual
+
+    - uses: nick-fields/assert-action@v1
+      if: ${{ inputs.matrix-step-name != '' }}
+      with:
+        expected: ''
+        actual: "${{ inputs.matrix-key }}"
+        comparison: notEqual
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
       id: write
