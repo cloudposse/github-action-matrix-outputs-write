@@ -32,7 +32,7 @@ jobs:
       - shell: bash
         run:
           echo '${{ toJson(runner) }}'
-        
+
       - name: Checkout
         uses: actions/checkout@v3
 

@@ -5,6 +5,9 @@ branding:
   icon: 'file'
   color: 'white'
 inputs:
+  matrix-step-name:
+    required: false
+    description: "Matrix step name"
   matrix-key:
     required: false
     description: "Matrix key"
@@ -52,14 +55,14 @@ runs:
     - shell: bash
       if: ${{ inputs.read == '' }}
       run: |
-        echo '${{ steps.write.outputs.result }}' > matrix
+        echo '${{ steps.write.outputs.result }}' > ${{ inputs.matrix-step-name }}
       id: matrix
 
     - uses: actions/upload-artifact@v3
       if: ${{ inputs.read == '' }}
       with:
         name: ${{ hashFiles('matrix') || 'none' }}
-        path: matrix
+        path: ${{ inputs.matrix-step-name }}
         if-no-files-found: warn
 
     - uses: actions/download-artifact@v3
@@ -67,7 +70,8 @@ runs:
     - shell: bash
       if: ${{ inputs.read != '' }}
       run: |
-        matrix="$(cat */matrix | jq -c --slurp 'map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)' )"
+        JQ_QUERY="map(to_entries | map(.key as $matrix_key | .value | map_values({($matrix_key): .}))) | flatten | reduce .[] as $item ({}; . * $item)"
+        matrix=$(cat */${{ inputs.matrix-step-name }} | jq -c --slurp "${JQ_QUERY}" )
         echo "::set-output name=result::$matrix"
       id: context
 
