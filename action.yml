@@ -17,7 +17,7 @@ inputs:
 outputs:
   result:
     description: "Outputs result"
-    value: "${{ steps.write.outputs.result }}"
+    value: "${{ steps.proxy.outputs.result }}"
 runs:
   using: "composite"
   steps:
@@ -47,6 +47,14 @@ runs:
             result:
               ${{ inputs.matrix-key || 'null' }}:
                 ${{ inputs.outputs }}
+
+    - uses: cloudposse/github-action-yaml-config-query@0.1.0
+      id: proxy
+      with:
+        query: .
+        config: |-
+          result:
+            ${{ inputs.outputs }}
 
     - shell: bash
       if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
