@@ -1,23 +1,62 @@
-name: 'Example composite GitHub action'
-description: 'Example composite GitHub action'
+name: 'Matrix outputs write'
+description: 'Write outputs for matrix'
 author: hello@cloudposse.com
 branding:
-  icon: 'file'
+  icon: 'chevrons-up'
   color: 'white'
 inputs:
-  param1:
-    required: true
-    description: "Input parameter placeholder"
-    default: "true"
+  matrix-step-name:
+    required: false
+    description: "Matrix step name"
+  matrix-key:
+    required: false
+    description: "Matrix key"
+  outputs:
+    required: false
+    description: "YAML structured map of outputs"
 outputs:
-  result1:
-    description: "Output result placeholder"
-    value: "${{ steps.context.outputs.action-result }}"
+  result:
+    description: "Outputs result"
+    value: "${{ steps.write.outputs.result }}"
 runs:
   using: "composite"
   steps:
-    - id: context
-      shell: bash
-      run: |
-          echo "::set-output name=action-result::${{ inputs.param1 }}"
+    - uses: nick-fields/assert-action@v1
+      if: ${{ inputs.matrix-key != '' }}
+      with:
+        expected: ''
+        actual: "${{ inputs.matrix-step-name }}"
+        comparison: notEqual
 
+    - uses: nick-fields/assert-action@v1
+      if: ${{ inputs.matrix-step-name != '' }}
+      with:
+        expected: ''
+        actual: "${{ inputs.matrix-key }}"
+        comparison: notEqual
+
+    - uses: cloudposse/github-action-yaml-config-query@0.1.0
+      id: write
+      with:
+        query: .${{ inputs.matrix-key == '' }}
+        config: |-
+          true:
+            result:
+              ${{ inputs.outputs }}
+          false:
+            result:
+              ${{ inputs.matrix-key || 'null' }}:
+                ${{ inputs.outputs }}
+
+    - shell: bash
+      if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
+      run: |
+        echo '${{ steps.write.outputs.result }}' > ${{ inputs.matrix-step-name }}
+      id: matrix
+
+    - uses: actions/upload-artifact@v3
+      if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
+      with:
+        name: ${{ hashFiles( inputs.matrix-step-name ) || 'none' }}
+        path: ${{ inputs.matrix-step-name }}
+        if-no-files-found: warn

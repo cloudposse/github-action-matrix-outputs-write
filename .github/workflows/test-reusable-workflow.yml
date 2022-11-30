@@ -1,4 +1,4 @@
-name: Test example positive
+name: Test reusable workflow
 on:
 #  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
 #  #
@@ -9,24 +9,13 @@ on:
 
 jobs:
   setup:
-    runs-on: ubuntu-latest
+    uses: cloudposse/github-action-matrix-outputs-write/.github/workflows/setup-test.yml@initail
     strategy:
       matrix:
         target: ["one", "two"]
-    steps:
-      - name: Setup
-        run: echo "Do setup"
-
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - uses: ./
-        id: writer
-        with:
-          matrix-step-name: ${{ github.job }}
-          matrix-key: ${{ matrix.target }}
-          outputs: |-
-            result: ${{ matrix.target }}
+    with:
+      matrix-step-name: setup
+      matrix-key: ${{ matrix.target }}
 
   test:
     runs-on: ubuntu-latest

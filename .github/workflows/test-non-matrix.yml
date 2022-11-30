@@ -1,4 +1,4 @@
-name: Test example positive
+name: Test example non-matrix
 on:
 #  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
 #  #
@@ -10,34 +10,23 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: ["one", "two"]
     steps:
       - name: Setup
         run: echo "Do setup"
-
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - uses: ./
-        id: writer
-        with:
-          matrix-step-name: ${{ github.job }}
-          matrix-key: ${{ matrix.target }}
-          outputs: |-
-            result: ${{ matrix.target }}
 
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
     needs: [setup]
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - id: current
-        run: |-
-          echo "result=$(ls | wc -l)" >> $GITHUB_OUTPUT
+      - uses: ./
+        id: current
+        with:
+          outputs: |-
+            result: one
 
     outputs:
       result: "${{ steps.current.outputs.result }}"
@@ -48,8 +37,13 @@ jobs:
     steps:
       - uses: nick-fields/assert-action@v1
         with:
-          expected: '2'
+          expected: '{"result":"one"}'
           actual: "${{ needs.test.outputs.result }}"
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: 'one'
+          actual: ${{ fromJson(needs.test.outputs.result).result }}
 
   teardown:
     runs-on: ubuntu-latest
