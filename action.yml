@@ -36,6 +36,14 @@ runs:
         comparison: notEqual
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
+      id: proxy
+      with:
+        query: .
+        config: |-
+          result:
+            ${{ inputs.outputs }}
+
+    - uses: cloudposse/github-action-yaml-config-query@0.1.0
       id: write
       with:
         query: .${{ inputs.matrix-key == '' }}
@@ -47,14 +55,6 @@ runs:
             result:
               ${{ inputs.matrix-key || 'null' }}:
                 ${{ inputs.outputs }}
-
-    - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      id: proxy
-      with:
-        query: .
-        config: |-
-          result:
-            ${{ inputs.outputs }}
 
     - shell: bash
       if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
