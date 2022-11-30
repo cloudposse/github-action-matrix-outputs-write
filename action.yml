@@ -39,7 +39,7 @@ runs:
       id: proxy
       with:
         query: .
-        config: |-
+        config: |
           result:
             ${{ inputs.outputs }}
 
