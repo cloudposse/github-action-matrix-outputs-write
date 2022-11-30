@@ -28,6 +28,11 @@ jobs:
           outputs: |-
             result: ${{ matrix.target }}
 
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: ${{ matrix.target }}
+          actual: ${{ fromJson(steps.writer.outputs.result).result }}
+
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -50,6 +55,7 @@ jobs:
         with:
           expected: '2'
           actual: "${{ needs.test.outputs.result }}"
+
 
   teardown:
     runs-on: ubuntu-latest
