@@ -54,13 +54,6 @@ runs:
         JSON=$(echo "${{ inputs.outputs }}" | yq '.' -o json | jq . -c -M -e)
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
-    - shell: bash
-      id: proxy
-      run: |-
-        JSON=$(echo "${{ inputs.outputs }}" | yq '.' -o json | jq . -c -M -e)
-        echo "result=${JSON}" >> $GITHUB_OUTPUT
-
-
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
       id: mask
       with:
