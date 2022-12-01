@@ -62,7 +62,7 @@ runs:
           true:
             mask: ". + {}"
           false:
-            mask: {"${{ inputs.matrix-key}}": . + {}}
+            mask: "{"${{ inputs.matrix-key}}": . + {}}"
 
     - shell: bash
       id: write
