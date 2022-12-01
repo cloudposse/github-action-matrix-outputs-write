@@ -60,7 +60,7 @@ runs:
         query: .${{ inputs.matrix-key == '' }}
         config: |-
           true:
-            mask: . + {}
+            mask: ". + {}"
           false:
             mask: {"${{ inputs.matrix-key}}": . + {}}
 
