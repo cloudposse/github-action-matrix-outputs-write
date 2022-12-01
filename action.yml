@@ -53,7 +53,7 @@ runs:
       run: |-
         JSON=$(echo "${{ inputs.outputs }}" | yq '{"result": .}' -o json | jq . -c -M -e)
         echo "result=${JSON//\"/\\\"}"
-        echo "result=${JSON//\"/\\\"}" >> $GITHUB_OUTPUT
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
       id: write
