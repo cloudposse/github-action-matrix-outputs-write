@@ -32,7 +32,7 @@ jobs:
       - uses: nick-fields/assert-action@v1
         with:
           expected: ${{ matrix.target }}
-          actual: ${{ steps.writer.outputs.result }}
+          actual: ${{ fromJson(steps.writer.outputs.result).result }}
 
       - uses: nick-fields/assert-action@v1
         with:

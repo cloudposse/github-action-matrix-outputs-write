@@ -51,7 +51,7 @@ runs:
     - shell: bash
       id: proxy
       run: |-
-        JSON=$(echo "${{ inputs.outputs }}" | yq '{"result": .}' -o json | jq . -c -M -e)
+        JSON=$(echo "${{ inputs.outputs }}" | yq '.' -o json | jq . -c -M -e)
         echo "result=${JSON//\"/\\\"}"
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
