@@ -42,7 +42,7 @@ runs:
         force: 'true'
 
     - name: 'Setup yq'
-      uses: dcarbone/install-yq-action@v1.0.0
+      uses: dcarbone/install-yq-action@v1.0.1
       with:
         version: v4.28.1
         download-compressed: true
