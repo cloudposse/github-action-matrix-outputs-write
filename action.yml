@@ -35,26 +35,40 @@ runs:
         actual: "${{ inputs.matrix-key }}"
         comparison: notEqual
 
-    - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      id: proxy
+    - name: 'Install jq 1.6'
+      uses: dcarbone/install-jq-action@v1.0.1
       with:
-        query: .
-        config: |-
-          result:
-            ${{ inputs.outputs }}
+        version: 1.6
+        force: 'true'
 
-    - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      id: write
+    - name: 'Setup yq'
+      uses: dcarbone/install-yq-action@v1.0.0
+      with:
+        version: v4.28.1
+        download-compressed: true
+        force: true
+
+    - shell: bash
+      id: proxy
+      run: |-
+        JSON=$(echo "${{ inputs.outputs }}" | yq '. + {}' -o json | jq . -c -M -e)
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
+
+    - uses: cloudposse/github-action-yaml-config-query@0.1.1
+      id: mask
       with:
         query: .${{ inputs.matrix-key == '' }}
         config: |-
           true:
-            result:
-              ${{ inputs.outputs }}
+            mask: ". + {}"
           false:
-            result:
-              ${{ inputs.matrix-key || 'null' }}:
-                ${{ inputs.outputs }}
+            mask: "{\"${{ inputs.matrix-key}}\": . + {}}"
+
+    - shell: bash
+      id: write
+      run: |-
+        JSON=$(echo "${{ inputs.outputs }}" | yq '${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - shell: bash
       if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}

@@ -27,11 +27,17 @@ jobs:
           matrix-key: ${{ matrix.target }}
           outputs: |-
             result: ${{ matrix.target }}
+            test: existing_value
 
       - uses: nick-fields/assert-action@v1
         with:
           expected: ${{ matrix.target }}
           actual: ${{ fromJson(steps.writer.outputs.result).result }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: existing_value
+          actual: ${{ fromJson(steps.writer.outputs.result).test }}
 
   test:
     runs-on: ubuntu-latest
