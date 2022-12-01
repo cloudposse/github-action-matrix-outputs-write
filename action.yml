@@ -52,21 +52,30 @@ runs:
       id: proxy
       run: |-
         JSON=$(echo "${{ inputs.outputs }}" | yq '.' -o json | jq . -c -M -e)
-        echo "result=${JSON//\"/\\\"}"
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
+    - shell: bash
+      id: proxy
+      run: |-
+        JSON=$(echo "${{ inputs.outputs }}" | yq '.' -o json | jq . -c -M -e)
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
+
+
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
-      id: write
+      id: mask
       with:
         query: .${{ inputs.matrix-key == '' }}
         config: |-
           true:
-            result:
-              ${{ inputs.outputs }}
+            mask: .
           false:
-            result:
-              ${{ inputs.matrix-key || 'null' }}:
-                ${{ inputs.outputs }}
+            mask: {"${{ inputs.matrix-key}}": .}
+
+    - shell: bash
+      id: write
+      run: |-
+        JSON=$(echo "${{ inputs.outputs }}" | yq '${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - shell: bash
       if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
