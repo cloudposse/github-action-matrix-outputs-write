@@ -51,7 +51,7 @@ runs:
     - shell: bash
       id: proxy
       run: |-
-        JSON=$(echo "${{ inputs.outputs }}" | yq '.' -o json | jq . -c -M -e)
+        JSON=$(echo "${{ inputs.outputs }}" | yq '{} + .' -o json | jq . -c -M -e)
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.0
@@ -60,9 +60,9 @@ runs:
         query: .${{ inputs.matrix-key == '' }}
         config: |-
           true:
-            mask: .
+            mask: {} + .
           false:
-            mask: {"${{ inputs.matrix-key}}": .}
+            mask: {"${{ inputs.matrix-key}}": {} + .}
 
     - shell: bash
       id: write
