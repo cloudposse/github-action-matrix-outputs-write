@@ -54,7 +54,7 @@ runs:
         JSON=$(echo "${{ inputs.outputs }}" | yq '. + {}' -o json | jq . -c -M -e)
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
-    - uses: cloudposse/github-action-yaml-config-query@0.1.1
+    - uses: cloudposse/github-action-yaml-config-query@0.1.2
       id: mask
       with:
         query: .${{ inputs.matrix-key == '' }}
