@@ -5,7 +5,7 @@
 #
 
 # Name of this project
-name: example-github-action-composite
+name: github-action-matrix-outputs-write
 
 # Tags of this project
 tags:
@@ -18,25 +18,34 @@ tags:
 license: "APACHE2"
 
 # Canonical GitHub repo
-github_repo: cloudposse/example-github-action-composite
+github_repo: cloudposse/github-action-matrix-outputs-write
 
 # Badges to display
 badges:
   - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/example-github-action-composite.svg"
-    url: "https://github.com/cloudposse/example-github-action-composite/releases/latest"
+    image: "https://img.shields.io/github/release/cloudposse/github-action-matrix-outputs-write.svg"
+    url: "https://github.com/cloudposse/github-action-matrix-outputs-write/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
 
-related: []
+related:
+  - name: "github-action-matrix-outputs-read"
+    description: "Matrix outputs read"
+    url: "https://github.com/cloudposse/github-action-matrix-outputs-write"
 
 # Short description of this project
-description: Template repository of composite GitHub Action
+description: [Workaround implementation](https://github.com/community/community/discussions/17245#discussioncomment-3814009) - Write matrix jobs outputs
 
 introduction: |-
-  This is template repository to create composite GitHub Actions. 
-  Feel free to use it as reference and starting point.
+  GitHub actions have an [Jobs need a way to reference all outputs of matrix jobs](https://github.com/community/community/discussions/17245) issue.
+  If there is a job that runs multiple times with `strategy.matrix` only the latest iteration's output availiable for 
+  reference in other jobs.
+  
+  There is a [workaround](https://github.com/community/community/discussions/17245#discussioncomment-3814009) to address the limitation.
+  We implement the workaround with two GitHub Actions:
+  * [Matrix Outputs Write](https://github.com/cloudposse/github-action-matrix-outputs-write)
+  * [Matrix Outputs Read](https://github.com/cloudposse/github-action-matrix-outputs-read)
 
 references:
   - name: "github-actions-workflows"
@@ -48,6 +57,8 @@ references:
 
 # How to use this project
 usage: |-
+  Example how you can use workaround to reference matrix job outputs.
+  
   ```yaml
     name: Pull Request
     on:
@@ -56,17 +67,214 @@ usage: |-
         types: [opened, synchronize, reopened, closed, labeled, unlabeled]
 
     jobs:
-      context:
+      build:
         runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            platform: ["i386", "arm64v8"]
         steps:
-          - name: Example action
-            uses: cloudposse/example-github-action-composite@main
-            id: example
+          - name: Checkout
+            uses: actions/checkout@v3
+  
+          - name: Build
+            id: build
+            uses: cloudposse/github-action-docker-build-push@1.9.0
             with:
-              param1: true
+              registry: registry.hub.docker.com
+              organization: "${{ github.event.repository.owner.login }}"
+              repository: "${{ github.event.repository.name }}"
+              build-args: |-
+                PLATFORM=${{ matrix.platform }}
+
+          ## Write for matrix outputs workaround 
+          - uses: cloudposse/github-action-matrix-outputs-write@main
+            id: out
+            with:
+              matrix-step-name: ${{ github.job }}
+              matrix-key: ${{ matrix.platform }}
+              outputs: |-
+                image: ${{ steps.build.outputs.image }}:${{ steps.build.outputs.tag }}
+  
+      ## Read matrix outputs 
+      read:
+        runs-on: ubuntu-latest
+        needs: [build]
+        steps:
+          - uses: cloudposse/github-action-matrix-outputs-read@main
+            id: read
+            with:
+              matrix-step-name: build
   
         outputs:
-          result: ${{ steps.example.outputs.result1 }}
+          result: "${{ steps.read.outputs.result }}"
+    
+      ## This how you can reference matrix output
+      assert:
+        runs-on: ubuntu-latest
+        needs: [read]
+        steps:
+          - uses: nick-fields/assert-action@v1
+            with:
+              expected: ${{ registry.hub.docker.com }}/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}:i386
+              ## This how you can reference matrix output
+              actual: ${{ fromJson(needs.read.outputs.result).image.i386 }}
+    
+          - uses: nick-fields/assert-action@v1
+            with:
+              expected: ${{ registry.hub.docker.com }}/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}:arm64v8
+              ## This how you can reference matrix output
+              actual: ${{ fromJson(needs.read.outputs.result).image.arm64v8 }}
+  ```
+
+  ### Reusable workflow example 
+  
+  Reusable workflow that support matrix outputs
+  `./.github/workflow/build-reusabled.yaml`
+  ```yaml
+  name: Build - Reusable workflow
+  on:
+    workflow_call:
+      inputs:
+        registry:
+          required: true
+          type: string
+        organization:
+          required: true
+          type: string
+        repository:
+          required: true
+          type: string
+        platform:
+          required: true
+          type: string
+        matrix-step-name:
+          required: false
+          type: string
+        matrix-key:
+          required: false
+          type: string
+      outputs:
+        image:
+          description: "Image"
+          value: ${{ jobs.write.outputs.image }}
+  
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Build
+          id: build
+          uses: cloudposse/github-action-docker-build-push@1.9.0
+          with:
+            registry: ${{ inputs.registry }}
+            organization: ${{ inputs.organization }}
+            repository: ${{ inputs.repository }}
+            build-args: |-
+              PLATFORM=${{ inputs.platform }}
+      outputs:
+        image: ${{ needs.build.outputs.image }}:${{ needs.build.outputs.tag }}
+  
+    write:
+      runs-on: ubuntu-latest
+      needs: [build]
+      steps:        
+        ## Write for matrix outputs workaround 
+        - uses: cloudposse/github-action-matrix-outputs-write@main
+          id: out
+          with:
+            matrix-step-name: ${{ inputs.matrix-step-name }}
+            matrix-key: ${{ inputs.matrix-key }}
+            outputs: |-
+              image: ${{ needs.build.outputs.image }}
+  
+      outputs:
+        image: ${{ fromJson(steps.out.outputs.result).image }}
+  ```
+  
+  Then you can use the workflow with matrix
+  ```
+  name: Pull Request
+  on:
+    pull_request:
+      branches: [ 'main' ]
+      types: [opened, synchronize, reopened, closed, labeled, unlabeled]
+
+  jobs:
+    build:
+      usage: ./.github/workflow/build-reusabled.yaml
+      strategy:
+        matrix:
+          platform: ["i386", "arm64v8"]
+      with:
+        registry: registry.hub.docker.com
+        organization: "${{ github.event.repository.owner.login }}"
+        repository: "${{ github.event.repository.name }}"
+        platform: ${{ matrix.platform }}
+        matrix-step-name: ${{ github.job }}
+        matrix-key: ${{ matrix.platform }}
+
+    ## Read matrix outputs 
+    read:
+      runs-on: ubuntu-latest
+      needs: [build]
+      steps:
+        - uses: cloudposse/github-action-matrix-outputs-read@main
+          id: read
+          with:
+            matrix-step-name: build
+
+      outputs:
+        result: "${{ steps.read.outputs.result }}"
+
+    ## This how you can reference matrix output
+    assert:
+      runs-on: ubuntu-latest
+      needs: [read]
+      steps:
+        - uses: nick-fields/assert-action@v1
+          with:
+            expected: ${{ registry.hub.docker.com }}/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}:i386
+            ## This how you can reference matrix output
+            actual: ${{ fromJson(needs.read.outputs.result).image.i386 }}
+
+        - uses: nick-fields/assert-action@v1
+          with:
+            expected: ${{ registry.hub.docker.com }}/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}:arm64v8
+            ## This how you can reference matrix output
+            actual: ${{ fromJson(needs.read.outputs.result).image.arm64v8 }}
+  ```
+  
+  or as a simple job
+  
+  ```yaml
+  name: Pull Request
+  on:
+    pull_request:
+      branches: [ 'main' ]
+      types: [opened, synchronize, reopened, closed, labeled, unlabeled]
+
+  jobs:
+    build:
+      usage: ./.github/workflow/build-reusabled.yaml
+      with:
+        registry: registry.hub.docker.com
+        organization: "${{ github.event.repository.owner.login }}"
+        repository: "${{ github.event.repository.name }}"
+        platform: "i386"
+
+    ## This how you can reference single job output
+    assert:
+      runs-on: ubuntu-latest
+      needs: [build]
+      steps:
+        - uses: nick-fields/assert-action@v1
+          with:
+            expected: ${{ registry.hub.docker.com }}/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}:i386
+            ## This how you can reference matrix output
+            actual: ${{ needs.build.outputs.image }}
   ```
 
 include:
