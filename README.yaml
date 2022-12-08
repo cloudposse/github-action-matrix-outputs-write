@@ -32,7 +32,7 @@ badges:
 related:
   - name: "github-action-matrix-outputs-read"
     description: "Matrix outputs read"
-    url: "https://github.com/cloudposse/github-action-matrix-outputs-write"
+    url: "https://github.com/cloudposse/github-action-matrix-outputs-read"
 
 # Short description of this project
 description: |
