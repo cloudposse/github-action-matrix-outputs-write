@@ -148,7 +148,9 @@ Example how you can use workaround to reference matrix job outputs.
 ### Reusable workflow example 
 
 Reusable workflow that support matrix outputs
+
 `./.github/workflow/build-reusabled.yaml`
+
 ```yaml
 name: Build - Reusable workflow
 on:
@@ -214,7 +216,8 @@ jobs:
 ```
 
 Then you can use the workflow with matrix
-```
+
+```yaml
 name: Pull Request
 on:
   pull_request:
