@@ -35,7 +35,8 @@ related:
     url: "https://github.com/cloudposse/github-action-matrix-outputs-write"
 
 # Short description of this project
-description: [Workaround implementation](https://github.com/community/community/discussions/17245#discussioncomment-3814009) - Write matrix jobs outputs
+description: |
+  [Workaround implementation](https://github.com/community/community/discussions/17245#discussioncomment-3814009) - Write matrix jobs outputs
 
 introduction: |-
   GitHub actions have an [Jobs need a way to reference all outputs of matrix jobs](https://github.com/community/community/discussions/17245) issue.
