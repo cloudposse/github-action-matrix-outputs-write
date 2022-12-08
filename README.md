@@ -336,7 +336,7 @@ Are you using this project or any of our other projects? Consider [leaving a tes
 
 Check out these related projects.
 
-- [github-action-matrix-outputs-read](https://github.com/cloudposse/github-action-matrix-outputs-write) - Matrix outputs read
+- [github-action-matrix-outputs-read](https://github.com/cloudposse/github-action-matrix-outputs-read) - Matrix outputs read
 
 
 ## References
