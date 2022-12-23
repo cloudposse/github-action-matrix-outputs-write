@@ -6,7 +6,7 @@ on:
 
 jobs:
   perform:
-    uses: cloudposse/github-actions-workflows/.github/workflows/github-composite-action-feature-branch.yml@main
+    uses: cloudposse/github-actions-workflows-github-action-composite/.github/workflows/feature-branch.yml@main
     with:
       organization: "${{ github.event.repository.owner.login }}"
       repository: "${{ github.event.repository.name }}"
