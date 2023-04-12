@@ -28,7 +28,7 @@ jobs:
           outputs: |-
             result: ${{ matrix.target }}
             test: "comment: URL for deploy: https://frontend-docs-259.website.dev"
-            test2: 'comment: URL for deploy: https://frontend-docs-259.website.dev'
+            test2: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
 
       - uses: nick-fields/assert-action@v1
         with:
@@ -42,9 +42,9 @@ jobs:
 
       - uses: nick-fields/assert-action@v1
         with:
-          expected: "comment: URL for deploy: https://frontend-docs-259.website.dev"
+          expected: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test2 }}
-          
+
   test:
     runs-on: ubuntu-latest
     continue-on-error: true
