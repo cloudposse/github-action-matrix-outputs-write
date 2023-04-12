@@ -55,6 +55,7 @@ runs:
         echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json
         echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json | jq . -c -M -e
         JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
+        echo "result=${JSON//\"/\\\"}"
         echo "result=${JSON//\"/\\\"}" >> $GITHUB_OUTPUT
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.1
