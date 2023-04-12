@@ -52,9 +52,9 @@ runs:
       id: proxy
       run: |-
         if echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json ; then 
-            echo '${{ toJSON(inputs.outputs) }}'
-            echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json
-            echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e
+          echo '${{ toJSON(inputs.outputs) }}'
+          echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json
+          echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e
 
 
           JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
@@ -63,11 +63,10 @@ runs:
         else
           echo "Validation Error!!!"
           echo "Outputs is not valid YAML"
-        
           echo '${{ inputs.outputs }}'
           exit 1;
         fi
-        
+
     - uses: cloudposse/github-action-yaml-config-query@0.1.1
       id: mask
       with:
