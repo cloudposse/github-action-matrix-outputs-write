@@ -52,9 +52,9 @@ runs:
       id: proxy
       run: |-
         echo '${{ toJSON(inputs.outputs) }}'
-        echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json
-        echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json | jq . -c -M -e
-        JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
+        echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json
+        echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e
+        JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
         echo "result=${JSON}"
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
