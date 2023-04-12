@@ -33,12 +33,6 @@ jobs:
           download-compressed: true
           force: true
 
-      - name: Generate output with special chars
-        id: testcase
-        run: |
-          JSON=$(echo "comment: URL for deploy: https://frontend-docs-259.website.dev" | yq '. + {}' -o json | jq . -c -M -e)
-          echo "result=${JSON}" >> $GITHUB_OUTPUT
-
       - uses: ./
         id: writer
         with:
@@ -46,7 +40,7 @@ jobs:
           matrix-key: ${{ matrix.target }}
           outputs: |-
             result: ${{ matrix.target }}
-            test: ${{ steps.testcase.outputs.result }}
+            test: "comment: URL for deploy: https://frontend-docs-259.website.dev"
 
       - uses: nick-fields/assert-action@v1
         with:
