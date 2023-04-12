@@ -70,8 +70,8 @@ runs:
     - shell: bash
       id: write
       run: |-
-        JSON=$(echo "${{ inputs.outputs }}" | yq '${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)
-        echo "result=${JSON}" >> $GITHUB_OUTPUT
+        JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={}) | ${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)        
+        echo "result=${JSON//\"/\\\"}" >> $GITHUB_OUTPUT
 
     - shell: bash
       if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
