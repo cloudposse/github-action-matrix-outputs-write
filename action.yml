@@ -61,12 +61,12 @@ runs:
           echo "result=${JSON}" >> $GITHUB_OUTPUT
         else
           cat << EOF
-            Validation Error!
-            Outputs is not valid YAML:
-            
-            -------------------------------------
-            ${{ inputs.outputs }}
-            -------------------------------------
+        Validation Error!
+        Outputs is not valid YAML:
+        
+        -------------------------------------
+        ${{ inputs.outputs }}
+        -------------------------------------
         EOF
           exit 1;
         fi
