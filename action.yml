@@ -56,14 +56,18 @@ runs:
           echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json
           echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e
 
-
           JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
           echo "result=${JSON}"
           echo "result=${JSON}" >> $GITHUB_OUTPUT
         else
-          echo "Validation Error!!!"
-          echo "Outputs is not valid YAML"
-          echo '${{ inputs.outputs }}'
+          cat << EOF
+            Validation Error!
+            Outputs is not valid YAML:
+            
+            -------------------------------------
+            ${{ inputs.outputs }}
+            -------------------------------------
+        EOF
           exit 1;
         fi
 
