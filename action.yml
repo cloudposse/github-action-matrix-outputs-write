@@ -55,8 +55,8 @@ runs:
         echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json
         echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json | jq . -c -M -e
         JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
-        echo "result=${JSON//\"/\\\"}"
-        echo "result=${JSON//\"/\\\"}" >> $GITHUB_OUTPUT
+        echo "result=${JSON}"
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - uses: cloudposse/github-action-yaml-config-query@0.1.1
       id: mask
@@ -72,7 +72,7 @@ runs:
       id: write
       run: |-
         JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={}) | ${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)        
-        echo "result=${JSON//\"/\\\"}" >> $GITHUB_OUTPUT
+        echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - shell: bash
       if: ${{ inputs.outputs != '' && inputs.matrix-step-name != '' }}
