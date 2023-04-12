@@ -71,7 +71,7 @@ runs:
     - shell: bash
       id: write
       run: |-
-        JSON=$(echo '${{ toJSON(inputs.outputs) }}' | yq 'with(select(. != ""); .=from_json) | with(select(. == ""); .={}) | ${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)        
+        JSON=$(echo '${{ steps.proxy.outputs.result }}' | yq '${{ steps.mask.outputs.mask }}' -o json | jq . -c -M -e)        
         echo "result=${JSON}" >> $GITHUB_OUTPUT
 
     - shell: bash
