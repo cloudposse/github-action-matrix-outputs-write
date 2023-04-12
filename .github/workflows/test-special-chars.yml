@@ -42,7 +42,7 @@ jobs:
 
       - uses: nick-fields/assert-action@v1
         with:
-          expected: existing_value
+          expected: "comment: URL for deploy: https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test }}
 
   test:
