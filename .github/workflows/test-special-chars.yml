@@ -40,7 +40,7 @@ jobs:
           matrix-key: ${{ matrix.target }}
           outputs: |-
             result: ${{ matrix.target }}
-            test: "comment: URL for deploy: https://frontend-docs-259.website.dev"
+            test: comment: URL for deploy: https://frontend-docs-259.website.dev
 
       - uses: nick-fields/assert-action@v1
         with:
