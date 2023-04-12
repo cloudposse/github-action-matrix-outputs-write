@@ -52,11 +52,11 @@ runs:
       id: proxy
       run: |-
         echo ${{ toJSON(inputs.outputs) }}
-        if echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json ; then 
-          echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json
-          echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e
+        if echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. == null); . = {}) | with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json ; then 
+          echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. == null); . = {}) | with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json
+          echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. == null); . = {}) | with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e
 
-          JSON=$(echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
+          JSON=$(echo ${{ toJSON(inputs.outputs) }} | yq 'with(select(. == null); . = {}) | with(select(. != ""); .=from_yaml) | with(select(. == ""); .={})' -o json | jq . -c -M -e)
           echo "result=${JSON}"
           echo "result=${JSON}" >> $GITHUB_OUTPUT
         else
