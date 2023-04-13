@@ -46,12 +46,8 @@ ${outputs}
 
     const artifact_content = !isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
 
-    fs.appendFile(step_name, JSON.stringify(artifact_content), function (err) {
-        if (err) throw err;
-        console.log('File is created successfully.');
-    });
-
-    const fileBuffer = fs.readFileSync(step_name);
+    fs.writeFileSync("./" + step_name, JSON.stringify(artifact_content));
+    const fileBuffer = fs.readFileSync("./" + step_name);
     const hashSum = crypto.createHash('sha256');
     hashSum.update(fileBuffer);
 
@@ -60,7 +56,7 @@ ${outputs}
     const artifactClient = artifact.create()
     const artifactName = hex;
     const files = [
-        step_name,
+        "./" + step_name,
     ]
 
     const rootDirectory = '.' // Also possible to use __dirname
