@@ -3,6 +3,7 @@ const github = require('@actions/github');
 const yaml = require('js-yaml');
 const artifact = require('@actions/artifact');
 const crypto = require('crypto');
+const fs = require('fs');
 
 try {
     const step_name = core.getInput('matrix-step-name');
