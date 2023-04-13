@@ -45,7 +45,7 @@ ${outputs}
 
     const artifact_content = !isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
 
-    await fs.open(step_name, 'w', function (err, file) {
+    fs.open(step_name, 'w', function (err, file) {
         if (err) throw err;
         file.writeText(JSON.stringify(artifact_content))
     });
