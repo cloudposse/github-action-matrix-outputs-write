@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 const yaml = require('js-yaml');
 const artifact = require('@actions/artifact');
 const crypto = require('crypto');
