@@ -9,6 +9,15 @@ try {
     const matrix_key = core.getInput('matrix-key');
     const outputs = core.getInput('outputs');
 
+    core.debug("step_name:")
+    core.debug(step_name)
+
+    core.debug("matrix_key:")
+    core.debug(matrix_key)
+
+    core.debug("outputs:")
+    core.debug(outputs)
+
     function isEmptyInput(value) {
         return value === null || value.trim() === "";
     }
@@ -39,6 +48,12 @@ ${outputs}
 
     const outputs_struct = !isEmptyInput(outputs) ? yaml.load(outputs) : {}
 
+    core.debug("outputs_struct:")
+    core.debug(outputs_struct)
+
+    core.debug("JSON.stringify(outputs_struct):")
+    core.debug(JSON.stringify(outputs_struct))
+    
     core.setOutput('result', JSON.stringify(outputs_struct))
 
     if (!isEmptyInput(outputs)) {
