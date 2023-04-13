@@ -44,7 +44,7 @@ ${outputs}
     core.setOutput('result', JSON.stringify(outputs_struct))
 
     if (!isEmptyInput(outputs)) {
-        const artifact_content = !isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
+        const artifact_content = isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
 
         fs.writeFileSync("./" + step_name, JSON.stringify(artifact_content));
         const fileBuffer = fs.readFileSync("./" + step_name);
