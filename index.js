@@ -44,27 +44,29 @@ ${outputs}
 
     core.setOutput('result', JSON.stringify(outputs_struct))
 
-    const artifact_content = !isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
+    if (!isEmptyInput(outputs)) {
+        const artifact_content = !isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
 
-    fs.writeFileSync("./" + step_name, JSON.stringify(artifact_content));
-    const fileBuffer = fs.readFileSync("./" + step_name);
-    const hashSum = crypto.createHash('sha256');
-    hashSum.update(fileBuffer);
+        fs.writeFileSync("./" + step_name, JSON.stringify(artifact_content));
+        const fileBuffer = fs.readFileSync("./" + step_name);
+        const hashSum = crypto.createHash('sha256');
+        hashSum.update(fileBuffer);
 
-    const hex = hashSum.digest('hex');
+        const hex = hashSum.digest('hex');
 
-    const artifactClient = artifact.create()
-    const artifactName = hex;
-    const files = [
-        "./" + step_name,
-    ]
+        const artifactClient = artifact.create()
+        const artifactName = hex;
+        const files = [
+            "./" + step_name,
+        ]
 
-    const rootDirectory = '.' // Also possible to use __dirname
-    const options = {
-        continueOnError: false
+        const rootDirectory = '.' // Also possible to use __dirname
+        const options = {
+            continueOnError: false
+        }
+
+        const uploadResponse = artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
     }
-
-    const uploadResponse = artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
 } catch (error) {
     core.setFailed(error.message);
 }
