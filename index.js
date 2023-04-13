@@ -9,8 +9,6 @@ try {
     const matrix_key = core.getInput('matrix-key');
     const outputs = core.getInput('outputs');
 
-
-
     function isEmptyInput(value) {
         return value === null || value.trim() === "";
     }

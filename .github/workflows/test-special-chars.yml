@@ -5,7 +5,14 @@ on:
 #  # Added pull_request to register workflow from the PR.
 #  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
 #  pull_request: {}
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      paths:
+        description: 'A multiline yaml string of key/value pairs for each Name and Path to include in the comment'
+        required: false
+        default: |
+          Application: application
+          Dashboard: /dashboard      
 
 jobs:
   setup:
@@ -29,6 +36,8 @@ jobs:
             result: ${{ matrix.target }}
             test: "comment: URL for deploy: https://frontend-docs-259.website.dev"
             test2: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
+            test3: ${{ inputs.paths }}
+              
 
       - uses: nick-fields/assert-action@v1
         with:
@@ -44,6 +53,13 @@ jobs:
         with:
           expected: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test2 }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: |
+            Application: application
+            Dashboard: /dashboard
+          actual: ${{ fromJson(steps.writer.outputs.result).test3 }}
 
   test:
     runs-on: ubuntu-latest
