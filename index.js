@@ -42,7 +42,8 @@ try {
             message = `Outputs should be valid YAML 
 ---------------------
 ${outputs}
----------------------`;
+---------------------
+${error}`;
             core.setFailed(message);
             return
         }
