@@ -68,7 +68,7 @@ ${outputs}
         continueOnError: false
     }
 
-    const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+    const uploadResponse = artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
 } catch (error) {
     core.setFailed(error.message);
 }
