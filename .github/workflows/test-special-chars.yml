@@ -36,8 +36,8 @@ jobs:
             result: ${{ matrix.target }}
             test: "comment: URL for deploy: https://frontend-docs-259.website.dev"
             test2: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
-            test3: ${{ inputs.paths }}
-              
+            test3: |-
+              ${{ inputs.paths }}              
 
       - uses: nick-fields/assert-action@v1
         with:
