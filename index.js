@@ -46,11 +46,10 @@ ${outputs}
 
     const artifact_content = !isEmptyInput(matrix_key) ? outputs_struct : { matrix_key: outputs_struct }
 
-    fs.open(step_name, 'w', function (err, file) {
+    fs.appendFile(step_name, JSON.stringify(artifact_content), function (err) {
         if (err) throw err;
-        file.writeText(JSON.stringify(artifact_content))
+        console.log('File is created successfully.');
     });
-
 
     const fileBuffer = fs.readFileSync(step_name);
     const hashSum = crypto.createHash('sha256');
