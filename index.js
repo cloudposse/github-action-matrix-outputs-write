@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-// const yaml = require('js-yaml');
 const yaml = require('yaml')
 const artifact = require('@actions/artifact');
 const crypto = require('crypto');
@@ -35,7 +34,6 @@ try {
 
     if (!isEmptyInput(outputs)) {
         try {
-            // yaml.load(outputs);
             yaml.parse(outputs)
         }
         catch (error) {
@@ -49,8 +47,8 @@ ${error}`;
         }
     }
 
-    //const outputs_struct = !isEmptyInput(outputs) ? yaml.load(outputs) : {}
     const outputs_struct = !isEmptyInput(outputs) ? yaml.parse(outputs) : {}
+
     core.debug("outputs_struct:")
     core.debug(outputs_struct)
 
