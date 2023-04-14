@@ -95,6 +95,8 @@ usage: |-
               matrix-key: ${{ matrix.platform }}
               outputs: |-
                 image: ${{ steps.build.outputs.image }}:${{ steps.build.outputs.tag }}
+                ## Multiline string
+                tags: ${{ toJson(steps.build.outputs.image) }}
   
       ## Read matrix outputs 
       read:
@@ -195,6 +197,7 @@ usage: |-
   
       outputs:
         image: ${{ fromJson(steps.out.outputs.result).image }}
+        image_alternative: ${{ steps.out.outputs.image }}
   ```
   
   Then you can use the workflow with matrix
