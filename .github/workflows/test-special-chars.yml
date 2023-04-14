@@ -33,7 +33,7 @@ jobs:
           matrix-step-name: ${{ github.job }}
           matrix-key: ${{ matrix.target }}
           outputs: |-
-            result: ${{ matrix.target }}
+            result2: ${{ matrix.target }}
             test: "comment: URL for deploy: https://frontend-docs-259.website.dev"
             test2: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
             test3: ${{ toJson(inputs.paths) }}              
@@ -41,7 +41,12 @@ jobs:
       - uses: nick-fields/assert-action@v1
         with:
           expected: ${{ matrix.target }}
-          actual: ${{ fromJson(steps.writer.outputs.result).result }}
+          actual: ${{ fromJson(steps.writer.outputs.result).result2 }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: ${{ matrix.target }}
+          actual: ${{ steps.writer.outputs.result2 }}
 
       - uses: nick-fields/assert-action@v1
         with:
@@ -50,8 +55,18 @@ jobs:
 
       - uses: nick-fields/assert-action@v1
         with:
+          expected: "comment: URL for deploy: https://frontend-docs-259.website.dev"
+          actual: ${{ steps.writer.outputs.test }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
           expected: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test2 }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
+          actual: ${{ steps.writer.outputs.test2 }}
 
       - uses: nick-fields/assert-action@v1
         with:
@@ -59,6 +74,13 @@ jobs:
             Application: application
             Dashboard: /dashboard
           actual: ${{ fromJson(steps.writer.outputs.result).test3 }}
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: |
+            Application: application
+            Dashboard: /dashboard
+          actual: ${{ steps.writer.outputs.test3 }}
 
   test:
     runs-on: ubuntu-latest

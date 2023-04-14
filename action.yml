@@ -16,7 +16,7 @@ inputs:
     description: "YAML structured map of outputs"
 outputs:
   result:
-    description: "Outputs result"
+    description: "Outputs result (Deprecated!!!)"
 runs:
   using: "node16"
   main: "index.js"
