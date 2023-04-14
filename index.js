@@ -50,11 +50,7 @@ ${error}`;
     }
 
     //const outputs_struct = !isEmptyInput(outputs) ? yaml.load(outputs) : {}
-    var outputs_struct = !isEmptyInput(outputs) ? yaml.parse(outputs) : {}
-    Object.keys(outputs_struct).forEach(function(key, index) {
-        outputs_struct[key] = JSON.stringify(outputs_struct[key]);
-    });
-
+    const outputs_struct = !isEmptyInput(outputs) ? yaml.parse(outputs) : {}
     core.debug("outputs_struct:")
     core.debug(outputs_struct)
 
