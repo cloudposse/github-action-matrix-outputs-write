@@ -1,0 +1,31 @@
+{
+  "name": "matrix-outputs-write",
+  "version": "1.0.0",
+  "description": "<!-- markdownlint-disable --> # github-action-matrix-outputs-write [![Latest Release](https://img.shields.io/github/release/cloudposse/github-action-matrix-outputs-write.svg)](https://github.com/cloudposse/github-action-matrix-outputs-write/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com) <!-- markdownlint-restore -->",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudposse/github-action-matrix-outputs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cloudposse/github-action-matrix-outputs/issues"
+  },
+  "homepage": "https://github.com/marketplace/actions/matrix-outputs-write",
+  "dependencies": {
+    "@actions/artifact": "^1.1.1",
+    "@actions/core": "^1.10.0",
+    "crypto": "^1.0.1",
+    "fs": "^0.0.1-security",
+    "tmp": "^0.2.1",
+    "yaml": "^2.2.1"
+  }
+}
