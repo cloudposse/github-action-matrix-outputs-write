@@ -13,5 +13,5 @@
 
 | Name | Description |
 |------|-------------|
-| result | Outputs result |
+| result | Outputs result (Deprecated!!!) |
 <!-- markdownlint-restore -->
