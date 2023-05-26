@@ -113,6 +113,8 @@ Example how you can use workaround to reference matrix job outputs.
             matrix-key: ${{ matrix.platform }}
             outputs: |-
               image: ${{ steps.build.outputs.image }}:${{ steps.build.outputs.tag }}
+              ## Multiline string
+              tags: ${{ toJson(steps.build.outputs.image) }}
 
     ## Read matrix outputs 
     read:
@@ -213,6 +215,7 @@ jobs:
 
     outputs:
       image: ${{ fromJson(steps.out.outputs.result).image }}
+      image_alternative: ${{ steps.out.outputs.image }}
 ```
 
 Then you can use the workflow with matrix
@@ -319,7 +322,7 @@ jobs:
 
 | Name | Description |
 |------|-------------|
-| result | Outputs result |
+| result | Outputs result (Deprecated!!!) |
 <!-- markdownlint-restore -->
 
 
@@ -418,7 +421,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2022 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2023 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
