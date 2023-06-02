@@ -94,6 +94,7 @@ jobs:
           echo "result=$(ls | wc -l)" >> $GITHUB_OUTPUT
 
     outputs:
+      outcome: "${{ steps.current.outcome }}"
       result: "${{ steps.current.outputs.result }}"
 
   assert:
@@ -104,6 +105,11 @@ jobs:
         with:
           expected: '2'
           actual: "${{ needs.test.outputs.result }}"
+
+      - uses: nick-fields/assert-action@v1
+        with:
+          expected: 'success'
+          actual: "${{ needs.test.outputs.outcome }}"
 
 
   teardown:
