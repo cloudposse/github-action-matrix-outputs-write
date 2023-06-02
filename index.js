@@ -32,6 +32,8 @@ try {
         return
     }
 
+    const matrix_mode = !isEmptyInput(step_name) && !isEmptyInput(matrix_key)
+
     if (!isEmptyInput(outputs)) {
         try {
             yaml.parse(outputs)
@@ -61,7 +63,7 @@ ${error}`;
 
     core.setOutput('result', JSON.stringify(outputs_struct))
 
-    if (!isEmptyInput(outputs)) {
+    if (!isEmptyInput(outputs) && matrix_mode) {
         const artifact_content = isEmptyInput(matrix_key) ? outputs_struct : { [matrix_key]: outputs_struct }
 
         fs.writeFileSync("./" + step_name, JSON.stringify(artifact_content));
