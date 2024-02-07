@@ -29,12 +29,12 @@ jobs:
             result: ${{ matrix.target }}
             test: existing_value
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: ${{ matrix.target }}
           actual: ${{ fromJson(steps.writer.outputs.result).result }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: existing_value
           actual: ${{ fromJson(steps.writer.outputs.result).test }}
@@ -58,12 +58,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: '2'
           actual: "${{ needs.test.outputs.result }}"
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: 'success'
           actual: "${{ needs.test.outputs.outcome }}"
