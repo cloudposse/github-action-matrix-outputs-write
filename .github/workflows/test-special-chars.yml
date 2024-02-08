@@ -38,44 +38,44 @@ jobs:
             test2: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
             test3: ${{ toJson(inputs.paths) }}              
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: ${{ matrix.target }}
           actual: ${{ fromJson(steps.writer.outputs.result).result2 }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: ${{ matrix.target }}
           actual: ${{ steps.writer.outputs.result2 }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: "comment: URL for deploy: https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: "comment: URL for deploy: https://frontend-docs-259.website.dev"
           actual: ${{ steps.writer.outputs.test }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test2 }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: "comment: URL for deploy: ' https://frontend-docs-259.website.dev"
           actual: ${{ steps.writer.outputs.test2 }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: |
             Application: application
             Dashboard: /dashboard
           actual: ${{ fromJson(steps.writer.outputs.result).test3 }}
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: |
             Application: application
@@ -101,12 +101,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: '2'
           actual: "${{ needs.test.outputs.result }}"
 
-      - uses: nick-fields/assert-action@v1
+      - uses: nick-fields/assert-action@v2
         with:
           expected: 'success'
           actual: "${{ needs.test.outputs.outcome }}"
