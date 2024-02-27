@@ -84,7 +84,7 @@ ${error}`;
             continueOnError: false
         }
 
-        const {id, size} = artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+        const {id, size} = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
 
         console.log(`Created artifact with id: ${id} (bytes: ${size}`)
     }
