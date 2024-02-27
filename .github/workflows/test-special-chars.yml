@@ -91,6 +91,7 @@ jobs:
 
       - id: current
         run: |-
+          ls -la ./
           echo "result=$(ls | wc -l)" >> $GITHUB_OUTPUT
 
     outputs:
