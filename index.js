@@ -73,7 +73,7 @@ ${error}`;
 
         const hex = hashSum.digest('hex');
 
-        const artifactClient = artifact.create()
+        const artifactClient = new artifact();
         const artifactName = hex;
         const files = [
             "./" + step_name,
@@ -84,7 +84,9 @@ ${error}`;
             continueOnError: false
         }
 
-        const uploadResponse = artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+        const {id, size} = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
+
+        console.log(`Created artifact with id: ${id} (bytes: ${size}`)
     }
 } catch (error) {
     core.setFailed(error.message);
