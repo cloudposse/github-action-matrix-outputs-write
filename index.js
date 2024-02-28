@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const yaml = require('yaml')
-const artifact = require('@actions/artifact');
+const {DefaultArtifactClient} = require('@actions/artifact')
 const crypto = require('crypto');
 const fs = require('fs');
 
@@ -73,7 +73,7 @@ ${error}`;
 
         const hex = hashSum.digest('hex');
 
-        const artifactClient = new artifact();
+        const artifactClient = new DefaultArtifactClient();
         const artifactName = hex;
         const files = [
             "./" + step_name,
