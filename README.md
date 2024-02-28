@@ -122,7 +122,7 @@ Example how you can use workaround to reference matrix job outputs.
               PLATFORM=${{ matrix.platform }}
 
         ## Write for matrix outputs workaround 
-        - uses: cloudposse/github-action-matrix-outputs-write@main
+        - uses: cloudposse/github-action-matrix-outputs-write@v1
           id: out
           with:
             matrix-step-name: ${{ github.job }}
@@ -137,7 +137,7 @@ Example how you can use workaround to reference matrix job outputs.
       runs-on: ubuntu-latest
       needs: [build]
       steps:
-        - uses: cloudposse/github-action-matrix-outputs-read@main
+        - uses: cloudposse/github-action-matrix-outputs-read@v1
           id: read
           with:
             matrix-step-name: build
@@ -221,7 +221,7 @@ jobs:
     needs: [build]
     steps:        
       ## Write for matrix outputs workaround 
-      - uses: cloudposse/github-action-matrix-outputs-write@main
+      - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: out
         with:
           matrix-step-name: ${{ inputs.matrix-step-name }}
@@ -262,7 +262,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: cloudposse/github-action-matrix-outputs-read@main
+      - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
         with:
           matrix-step-name: build
