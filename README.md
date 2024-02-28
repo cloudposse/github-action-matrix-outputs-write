@@ -68,6 +68,22 @@ We implement the workaround with two GitHub Actions:
 * [Matrix Outputs Write](https://github.com/cloudposse/github-action-matrix-outputs-write)
 * [Matrix Outputs Read](https://github.com/cloudposse/github-action-matrix-outputs-read)
 
+## v1 - What's new
+
+> [!IMPORTANT]
+> cloudposse/github-action-matrix-outputs-write@v1+ is not currently supported on GHES yet. If you are on GHES, you 
+> must use [v0](https://github.com/cloudposse/github-action-matrix-outputs-write/releases/tag/0.5.0).
+
+The release of `cloudposse/github-action-matrix-outputs-write@v1` and `cloudposse/github-action-matrix-outputs-read@v1` 
+are major changes to the backend architecture of Artifacts. They have numerous performance and behavioral improvements.
+
+For more information, see the [`@actions/artifact`](https://github.com/actions/toolkit/tree/main/packages/artifact) documentation.
+
+### Breaking Changes
+
+1. On self hosted runners, additional [firewall rules](https://github.com/actions/toolkit/tree/main/packages/artifact#breaking-changes) may be required.
+2. Outputs writen with `cloudposse/github-action-matrix-outputs-write@v1` can not be read by `cloudposse/github-action-matrix-outputs-read@v0`and below versions.  
+
 
 
 
@@ -106,7 +122,7 @@ Example how you can use workaround to reference matrix job outputs.
               PLATFORM=${{ matrix.platform }}
 
         ## Write for matrix outputs workaround 
-        - uses: cloudposse/github-action-matrix-outputs-write@main
+        - uses: cloudposse/github-action-matrix-outputs-write@v1
           id: out
           with:
             matrix-step-name: ${{ github.job }}
@@ -121,7 +137,7 @@ Example how you can use workaround to reference matrix job outputs.
       runs-on: ubuntu-latest
       needs: [build]
       steps:
-        - uses: cloudposse/github-action-matrix-outputs-read@main
+        - uses: cloudposse/github-action-matrix-outputs-read@v1
           id: read
           with:
             matrix-step-name: build
@@ -205,7 +221,7 @@ jobs:
     needs: [build]
     steps:        
       ## Write for matrix outputs workaround 
-      - uses: cloudposse/github-action-matrix-outputs-write@main
+      - uses: cloudposse/github-action-matrix-outputs-write@v1
         id: out
         with:
           matrix-step-name: ${{ inputs.matrix-step-name }}
@@ -246,7 +262,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: cloudposse/github-action-matrix-outputs-read@main
+      - uses: cloudposse/github-action-matrix-outputs-read@v1
         id: read
         with:
           matrix-step-name: build
@@ -421,7 +437,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2023 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2024 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 

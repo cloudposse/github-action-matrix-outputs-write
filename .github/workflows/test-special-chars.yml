@@ -87,10 +87,11 @@ jobs:
     continue-on-error: true
     needs: [setup]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
 
       - id: current
         run: |-
+          ls -la ./
           echo "result=$(ls | wc -l)" >> $GITHUB_OUTPUT
 
     outputs:
