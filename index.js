@@ -84,9 +84,7 @@ ${error}`;
             continueOnError: false
         }
 
-        const {id, size} = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
-
-        console.log(`Created artifact with id: ${id} (bytes: ${size}`)
+        artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
     }
 } catch (error) {
     core.setFailed(error.message);
