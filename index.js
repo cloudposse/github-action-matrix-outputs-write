@@ -7,6 +7,7 @@ const fs = require('fs');
 try {
     const step_name = core.getInput('matrix-step-name');
     const matrix_key = core.getInput('matrix-key');
+    const artifact_name = core.getInput('artifact-name');
     const outputs = core.getInput('outputs');
 
     core.debug("step_name:")
@@ -14,6 +15,9 @@ try {
 
     core.debug("matrix_key:")
     core.debug(matrix_key)
+
+    core.debug("artifact_name:")
+    core.debug(artifact_name)
 
     core.debug("outputs:")
     core.debug(outputs)
@@ -74,7 +78,7 @@ ${error}`;
         const hex = hashSum.digest('hex');
 
         const artifactClient = new DefaultArtifactClient();
-        const artifactName = hex;
+        const artifactName = isEmptyInput(artifact_name) ? hex : artifact_name + matrix_key;
         const files = [
             "./" + step_name,
         ]
