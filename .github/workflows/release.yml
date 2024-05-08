@@ -1,12 +1,13 @@
-name: Major Release Tagger
-
+name: Release
 on:
   release:
-    types:
-      - published
+    types: [published]
+
+permissions:
+  id-token: write
+  contents: write
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: cloudposse/github-action-major-release-tagger@v1
+  perform:
+    uses: cloudposse/github-actions-workflows-github-action-composite/.github/workflows/release.yml@main
+    secrets: inherit
