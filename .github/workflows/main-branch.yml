@@ -1,0 +1,21 @@
+name: Main branch
+on:
+  push:
+    branches:
+      - main
+      - release/v*
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'examples/**'
+      - 'test/**'
+      - 'README.md'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  perform:
+    uses: cloudposse/github-actions-workflows-github-action-composite/.github/workflows/main-branch.yml@main
+    secrets: inherit

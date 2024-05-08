@@ -1,15 +1,16 @@
 name: Feature branch
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - release/v*
     types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   perform:
     uses: cloudposse/github-actions-workflows-github-action-composite/.github/workflows/feature-branch.yml@main
-    with:
-      organization: "${{ github.event.repository.owner.login }}"
-      repository: "${{ github.event.repository.name }}"
-      ref: "${{ github.event.pull_request.head.ref  }}"
-    secrets:
-      github-private-actions-pat: "${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}"
+    secrets: inherit
