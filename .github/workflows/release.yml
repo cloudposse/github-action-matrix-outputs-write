@@ -8,6 +8,6 @@ permissions:
   contents: write
 
 jobs:
-  perform:
-    uses: cloudposse/github-actions-workflows-github-action-composite/.github/workflows/release.yml@main
+  github-action:
+    uses: cloudposse/.github/.github/workflows/shared-release-branches.yml@main
     secrets: inherit
