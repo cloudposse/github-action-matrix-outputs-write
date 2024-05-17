@@ -1,5 +1,10 @@
-name: Main branch
+name: Branch
 on:
+  pull_request:
+    branches:
+      - main
+      - release/**
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
@@ -16,6 +21,6 @@ permissions:
   actions: write
 
 jobs:
-  perform:
-    uses: cloudposse/github-actions-workflows-github-action-composite/.github/workflows/main-branch.yml@main
+  github-action:
+    uses: cloudposse/.github/.github/workflows/shared-github-action.yml@main
     secrets: inherit
