@@ -11,6 +11,9 @@ inputs:
   matrix-key:
     required: false
     description: "Matrix key"
+  artifact-name:
+    required: false
+    description: "Override the name used to store the artifact (default is a hash of the content)"
   outputs:
     required: false
     description: "YAML structured map of outputs"
