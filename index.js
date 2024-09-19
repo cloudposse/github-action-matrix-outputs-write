@@ -7,6 +7,7 @@ const fs = require('fs');
 try {
     const step_name = core.getInput('matrix-step-name');
     const matrix_key = core.getInput('matrix-key');
+    const artifact_retention_days = core.getInput('artifact-retention-days');
     const outputs = core.getInput('outputs');
 
     core.debug("step_name:")
@@ -14,6 +15,9 @@ try {
 
     core.debug("matrix_key:")
     core.debug(matrix_key)
+
+    core.debug("artifact_retention_days:")
+    core.debug(artifact_retention_days)
 
     core.debug("outputs:")
     core.debug(outputs)
@@ -33,6 +37,11 @@ try {
     }
 
     const matrix_mode = !isEmptyInput(step_name) && !isEmptyInput(matrix_key)
+
+    if (!parseInt(artifact_retention_days, 10)) {
+        core.setFailed("`artifact-retention-days` can not be non integer");
+        return
+    }
 
     if (!isEmptyInput(outputs)) {
         try {
@@ -81,7 +90,8 @@ ${error}`;
 
         const rootDirectory = '.' // Also possible to use __dirname
         const options = {
-            continueOnError: false
+            continueOnError: false,
+            retentionDays: parseInt(artifact_retention_days, 10)
         }
 
         artifactClient.uploadArtifact(artifactName, files, rootDirectory, options)
