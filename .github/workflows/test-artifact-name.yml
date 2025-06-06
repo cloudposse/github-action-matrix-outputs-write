@@ -1,0 +1,111 @@
+name: Test example artifact name overridden
+on:
+  push:
+#  # Uncomment when test added first time to register workflow and comment it back after workflow would be registered
+#  #
+#  # Added pull_request to register workflow from the PR.
+#  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
+#  pull_request: {}
+  workflow_dispatch: {}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: ["one", "two"]
+    steps:
+      - name: Setup
+        run: echo "Do setup"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: ./
+        id: writer
+        with:
+          matrix-step-name: setup1
+          matrix-key: ${{ matrix.target }}
+          artifact-name: setup1
+          outputs: |-
+            result: ${{ matrix.target }}
+            test: existing_value
+
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: ${{ matrix.target }}
+          actual: ${{ fromJson(steps.writer.outputs.result).result }}
+
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: existing_value
+          actual: ${{ fromJson(steps.writer.outputs.result).test }}
+
+  setup2:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: ["one", "two"]
+    steps:
+      - name: Setup
+        run: echo "Do setup"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: ./
+        id: writer
+        with:
+          matrix-step-name: setup2
+          matrix-key: ${{ matrix.target }}
+          artifact-name: setup2
+          outputs: |-
+            result: ${{ matrix.target }}
+            test: existing_value
+
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: ${{ matrix.target }}
+          actual: ${{ fromJson(steps.writer.outputs.result).result }}
+
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: existing_value
+          actual: ${{ fromJson(steps.writer.outputs.result).test }}
+
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: [setup]
+    steps:
+      - uses: actions/download-artifact@v4
+
+      - id: current
+        run: |-
+          echo "result=$(ls | wc -l)" >> $GITHUB_OUTPUT
+
+    outputs:
+      result: "${{ steps.current.outputs.result }}"
+      outcome: "${{ steps.current.outcome }}"
+
+  assert:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: '4'
+          actual: "${{ needs.test.outputs.result }}"
+
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: 'success'
+          actual: "${{ needs.test.outputs.outcome }}"
+
+  teardown:
+    runs-on: ubuntu-latest
+    needs: [assert]
+    if: ${{ always() }}
+    steps:
+      - name: Tear down
+        run: echo "Do Tear down"
