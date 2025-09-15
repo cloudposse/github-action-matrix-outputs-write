@@ -5,8 +5,16 @@ on:
 #  # Added pull_request to register workflow from the PR.
 #  # Read more https://stackoverflow.com/questions/63362126/github-actions-how-to-run-a-workflow-created-on-a-non-master-branch-from-the-wo
 #  pull_request: {}
-  workflow_dispatch: {}
-
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The fully-formed ref of the branch or tag that triggered the workflow run"
+        required: false
+        type: "string"
+      sha:
+        description: "The sha of the commit that triggered the workflow run"
+        required: false
+        type: "string"
 jobs:
   setup:
     runs-on: ubuntu-latest

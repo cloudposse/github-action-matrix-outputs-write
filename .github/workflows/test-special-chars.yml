@@ -7,7 +7,13 @@ on:
 #  pull_request: {}
   workflow_dispatch:
     inputs:
-      paths:
+      sha:
+        description: "The sha of the commit that triggered the workflow run"
+        required: false
+        type: "string"      ref:
+        description: "The fully-formed ref of the branch or tag that triggered the workflow run"
+        required: false
+        type: "string"      paths:
         description: 'A multiline yaml string of key/value pairs for each Name and Path to include in the comment'
         required: false
         default: |
