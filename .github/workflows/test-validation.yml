@@ -42,12 +42,12 @@ jobs:
             result: ${{ matrix.target }}
             test: comment: URL for deploy: https://frontend-docs-259.website.dev
 
-      - uses: nick-fields/assert-action@v2
+      - uses: nick-fields/assert-action@v3.0.0
         with:
           expected: ${{ matrix.target }}
           actual: ${{ fromJson(steps.writer.outputs.result).result }}
 
-      - uses: nick-fields/assert-action@v2
+      - uses: nick-fields/assert-action@v3.0.0
         with:
           expected: "comment: URL for deploy: https://frontend-docs-259.website.dev"
           actual: ${{ fromJson(steps.writer.outputs.result).test }}
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - uses: nick-fields/assert-action@v2
+      - uses: nick-fields/assert-action@v3.0.0
         with:
           expected: 'failure'
           actual: "${{ needs.test.outputs.result }}"
