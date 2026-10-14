@@ -28,7 +28,7 @@ jobs:
     needs: [setup]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: ./
         id: current
@@ -44,18 +44,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - uses: nick-fields/assert-action@v2
+      - uses: nick-fields/assert-action@0efd6166067d9c59d89c710fab4f79fb066f8985 # v4.0.1
         with:
           expected: '{"result":"one"}'
           actual: "${{ needs.test.outputs.result }}"
 
-      - uses: nick-fields/assert-action@v2
+      - uses: nick-fields/assert-action@0efd6166067d9c59d89c710fab4f79fb066f8985 # v4.0.1
         with:
           expected: 'success'
           actual: "${{ needs.test.outputs.outcome }}"
 
 
-      - uses: nick-fields/assert-action@v2
+      - uses: nick-fields/assert-action@0efd6166067d9c59d89c710fab4f79fb066f8985 # v4.0.1
         with:
           expected: 'one'
           actual: ${{ fromJson(needs.test.outputs.result).result }}
